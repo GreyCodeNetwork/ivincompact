@@ -9,6 +9,9 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%233b82f6'><path d='M12 2a2 2 0 0 1 2 2v2h2a2 2 0 0 1 2 2v2h1a1 1 0 0 1 1 1v6a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5v-6a1 1 0 0 1 1-1h1V8a2 2 0 0 1 2-2h2V4a2 2 0 0 1 2-2z'/></svg>">
     
+    <!-- Inline Web App Manifest to make the single-file setup PWA compliant -->
+    <link rel="manifest" href="data:application/manifest+json;base64,eyJuYW1lIjoiSVYgQ29tcGF0aWJpbGl0eSBDaGVja2VyIiwic2hvcnRfbmFtZSI6IklWIENvbXAiLCJzdGFydF91cmwiOiIuIiwiZGlzcGxheSI6InN0YW5kYWxvbmUiLCJiYWNrZ3JvdW5kX2NvbG9yIjoiIzBmMTcyYSIsInRoZW1lX2NvbG9yIjoiIzBmMTcyYSIsImljb25zIjpbeyJzcmMiOiJkYXRhOmltYWdlL3N2Zyt4bWw7YmFzZTY0LFBITjJaeUI0Yld4dWN6MGlhSFIwY0RvdkwzZDNkeTN6TXk1dmNtY3ZNakF3TUM5emRtY2lJSFpwWlhOQ2IzZzlJakFnTUNBeU5DQXlOQ2lnWm1sc2JEMGlJek5pT0RKbU5pSStQSEJoZEdnZ1pEMGlUVEV5SURKaE1pQXlJREFnTUNBeElESWdNbll5YURKaE1pQXlJREFnTUNBeElESWdNbll5YURGaE1TQXhJREFnTUNBeElERWdNWFkyWVRVZ05TQXdJREFnTVMwMUlEVklPV0UxSURVZ01DQXdJREV0TlMwMWRpMDJZVEVnTVNBd0lEQWdNU0F4TFRGb01WWTRZVElnTWlBd0lEQWdNU0F5TFRKb01sWTBRVElnTWlBd0lEQWdNU0F5TFRKNklpOCtQQzl6ZG1jKyIsInNpemVzIjoiMTkyeDE5MiIsInR5cGUiOiJpbWFnZS9zdmcreG1sIiwicHVycG9zZSI6ImFueSBtYXNrYWJsZSJ9LHsic3JjIjoiZGF0YTppbWFnZS9zdmcreG1sO2Jhc2U2NCxQSE4yWnlCNGJXeHVjejBpYUhSMGNEb3ZMM2QzZHkzek15NXZjbWN2TWpBd01DOXpkbWNpSUhacFpYTkNiM2c5SWpBZ01DQXlOQ0F5TkNpZ1ptbHNiRDBpSXpOaU9ESm1OaUkrUEhCaGRHZ2daZDBpVFRFeUlESmhNaUF5SURBZ01DQXhJRElnTW5ZeWFESmhNaUF5SURBZ01DQXhJRElnTW5ZeWFERmhNU0F4SURBZ01DQXhJREVnTVhZMllUVWdOU0F3SURBZ01TMDFJRFZJT1dFMUlEVWdNQ0F3SURFdE5TMDFkaTAyWVRFZ01TQXdJREFnTVNBeExURm9NVlk0WVRJZ01pQXdJREFnTVNBeUxUSm9NbFkwUVRJZ01pQXdJREFnTVNBeUxUSjZJaTgrUEM5emRtYysiLCJzaXplcyI6IjUxMng1MTIiLCJ0eXBlIjoiaW1hZ2Uvc3ZnK3htbCIsInB1cnBvc2UiOiJhbnkgbWFza2FibGUifV19">
+
     <title>IV Compatibility Checker</title>
     <style>
         /* Base / Dark Theme Variables */
@@ -472,9 +475,8 @@
         /* Tabs */
         .tabs-container {
             display: flex; gap: 0.5rem; margin-bottom: 1.25rem; padding-bottom: 0.5rem;
-            overflow-x: auto; scrollbar-width: none; -ms-overflow-style: none;
+            flex-wrap: wrap;
         }
-        .tabs-container::-webkit-scrollbar { display: none; }
         
         .tab-btn {
             background-color: var(--bg-color); border: 1px solid var(--border-color);
@@ -531,9 +533,9 @@
 
         .group-details {
             background-color: var(--bg-color); border-top: 1px solid var(--border-color);
-            font-size: 0.9rem; max-height: 0; overflow: hidden; transition: max-height 0.4s ease-out;
+            font-size: 0.9rem;
         }
-        .group-details:not(.hidden) { max-height: 2000px; }
+        .group-details.hidden { display: none; }
 
         .condition-row { padding: 1rem 1.25rem; border-bottom: 1px solid var(--border-color); }
         .condition-row:last-child { border-bottom: none; }
@@ -608,7 +610,7 @@
                     <span>Install App</span>
                 </button>
                 <button class="header-btn" aria-label="Settings" onclick="toggleSettings(true)">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
                 </button>
             </div>
         </header>
@@ -725,26 +727,55 @@ function setFontSize(size) {
 let deferredPrompt;
 const installBtn = document.getElementById('install-btn');
 
+// 1. Check if the app is already installed/running in standalone mode
+const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone || document.referrer.includes('android-app://');
+
+// 2. If not installed, ensure the button is visible. This acts as a manual fallback for iOS and other non-supporting browsers.
+if (!isStandalone) {
+    installBtn.classList.remove('hidden');
+}
+
+// 3. Listen for the native Chromium install prompt event
 window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault(); 
     deferredPrompt = e;
     installBtn.classList.remove('hidden'); 
 });
 
+// 4. Handle installation button clicks
 installBtn.addEventListener('click', async () => {
     if (deferredPrompt) {
+        // Chromium based browsers
         deferredPrompt.prompt();
         const { outcome } = await deferredPrompt.userChoice;
         if (outcome === 'accepted') {
             installBtn.classList.add('hidden');
         }
         deferredPrompt = null;
+    } else {
+        // Fallback instructions for iOS Safari and other non-supporting browsers
+        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+        if (isIOS) {
+            alert('To install on iOS: Tap the Share icon (square with an up arrow) at the bottom or top of your screen, then select "Add to Home Screen".');
+        } else {
+            alert('To install this app: Open your browser menu (usually three dots or lines) and select "Install App" or "Add to Home Screen".');
+        }
     }
 });
 
+// 5. Hide button once successfully installed
 window.addEventListener('appinstalled', () => {
     installBtn.classList.add('hidden');
 });
+
+// 6. Dummy Service Worker registration to satisfy strict browser PWA requirements if hosted
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        // Will fail silently locally if sw.js is missing, but required for strict PWA environments on servers.
+        navigator.serviceWorker.register('sw.js').catch(() => {});
+    });
+}
+
 
 // --- App Core Logic ---
 const drugSearchInput = document.getElementById('drug-search');
